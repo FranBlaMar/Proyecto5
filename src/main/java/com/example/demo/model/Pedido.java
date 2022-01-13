@@ -14,7 +14,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "Pedido")
 public class Pedido {
-	private int referencia;
+	private long referencia;
 	private Usuario usuarioPedido;
 	private HashMap <Producto,Integer> listaProductos;
 	private LocalDate fechaPedido;
@@ -44,7 +44,7 @@ public class Pedido {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int getReferencia() {
+	public long getReferencia() {
 		return referencia;
 	}
 

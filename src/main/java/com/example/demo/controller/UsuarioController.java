@@ -92,8 +92,8 @@ public class UsuarioController {
 			Usuario usuario = this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
 			model.addAttribute("nombre", usuario.getNombre());
 			//Obtengo los pedidos del usuario anterior
-			List<Pedido> listaPedidos = this.servicioUsuario.obtenerPedidosDeUsuario(usuario);
-			model.addAttribute("listaPedidos", listaPedidos);
+			/*List<Pedido> listaPedidos = this.servicioUsuario.obtenerPedidosDeUsuario(usuario);*/
+			/*model.addAttribute("listaPedidos", listaPedidos);*/
 			resultado = "lista";
 		}
 		return resultado;
@@ -155,7 +155,7 @@ public class UsuarioController {
 				//Creo y añadio el pedido a la lista de pedidos
 				Pedido p = this.servicioPedido.crearYAnadirPedido(us, precioTotal, cantidadesProductos);
 				//Le añado el pedido al usuario
-				this.servicioUsuario.anadirPedidoAUsuario(us, p);
+				/*this.servicioUsuario.anadirPedidoAUsuario(us, p);*/
 				model.addAttribute("pedido",p);
 				model.addAttribute("usuario",us);
 				resultado = "resumen";
@@ -263,7 +263,7 @@ public class UsuarioController {
 				//Obtengo el usuario y edito el pedido en la lista de pedidos y en la lista de pedidos del usuario
 				Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
 				Pedido p = this.servicioPedido.editarPedido(us, precioTotal, listaDeProductos,envio, refe, direccion, telefono, email);
-				this.servicioUsuario.editarPedido(p, us);
+				/*this.servicioUsuario.editarPedido(p, us);*/
 				resultado ="redirect:/listaPedidos";
 			}
 		}
@@ -286,7 +286,7 @@ public class UsuarioController {
 			Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
 			Pedido p = this.servicioPedido.obtenerPedidoPorReferencia(refe);
 			//Borro el pedido de ambas listas
-			this.servicioUsuario.borrarPedido(p, us);
+			/*this.servicioUsuario.borrarPedido(p, us);*/
 			this.servicioPedido.borrarPedido(p);
 			resultado = "redirect:/listaPedidos";
 		}

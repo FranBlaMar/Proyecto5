@@ -140,7 +140,6 @@ public class PedidoService {
 		productos1.put(this.servicioProducto.obtenerProductoPorId("444D"), 4);
 		productos1.put(this.servicioProducto.obtenerProductoPorId("333C"), 1);
 		pedido1.anadirProductos(productos1);
-		this.servicioUsuario.anadirPedidoAUsuario(usuario1, pedido1);
 		
 		Pedido pedido2 = new Pedido(usuario1, usuario1.getDireccion(), usuario1.getTelefono(), usuario1.getEmail());
 		pedido2.setTipoEnvio("EXPRESS");
@@ -152,7 +151,6 @@ public class PedidoService {
 		productos2.put(this.servicioProducto.obtenerProductoPorId("555E"), 1);
 		productos2.put(this.servicioProducto.obtenerProductoPorId("666F"), 1);
 		pedido2.anadirProductos(productos2);
-		this.servicioUsuario.anadirPedidoAUsuario(usuario1, pedido2);
 		
 		Usuario user2 = servicioUsuario.obtenerUsuario("J123");
 		Pedido pedido3 = new Pedido(user2,user2.getDireccion(), user2.getTelefono(), user2.getEmail());
@@ -163,7 +161,6 @@ public class PedidoService {
 		productos3.put(this.servicioProducto.obtenerProductoPorId("111A"), 3);
 		productos3.put(this.servicioProducto.obtenerProductoPorId("333C"), 2);
 		pedido3.anadirProductos(productos3);
-		this.servicioUsuario.anadirPedidoAUsuario(user2, pedido3);
 		
 		pedidosList.addAll(Arrays.asList(pedido1,pedido2,pedido3));
 	}

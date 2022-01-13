@@ -31,13 +31,13 @@ public class UsuarioService {
 	 * @param Usuario al que añadirle el pedido
 	 * @param Pedido el cual añadimos a la lista de pedidos del usuario
 	 */
-	public void anadirPedidoAUsuario(Usuario us, Pedido p) {
+	/*public void anadirPedidoAUsuario(Usuario us, Pedido p) {
 		for(Usuario user: this.usersList) {
 			if (user.equals(us)) {
 				user.anadirPedido(p);
 			}
 		}
-	}
+	}*/
 	
 	
 	/**
@@ -45,36 +45,37 @@ public class UsuarioService {
 	 * @param Pedido ya editado
 	 * @param Usuario al que vamos a editarle un pedido
 	 */
-	public void editarPedido(Pedido p, Usuario user) {
+	/*public void editarPedido(Pedido p, Usuario user) {
 		for(Usuario us : this.usersList) {
 			if(us.equals(user)) {
 				us.getPedidosUsuario().remove(p);
 				us.anadirPedido(p);
 			}
 		}
-	}
+	}*/
 	
 	/**
 	 * Metodo para borrar un pedido de la lista de pedidos de un usuario
 	 * @param Pedido que deseamos borrar
 	 * @param Usuario al que pertenece el pedido
 	 */
-	public void borrarPedido(Pedido p, Usuario us) {
+	/*public void borrarPedido(Pedido p, Usuario us) {
 		this.usersList.get(this.usersList.indexOf(us)).getPedidosUsuario().remove(p);
-	}
+	}*/
 	
 	/**
 	 * Metodo para obtener los pedidos de un usuario, los cuales devuelve ordenados por fecha
 	 * @param Usuario del que deseamos obtener los pedidos
 	 * @return Devuelve la lista de pedidos del usuario
 	 */
+	/*
 	public List<Pedido> obtenerPedidosDeUsuario(Usuario us){
 		int usIndex = this.usersList.indexOf(us);
 		Usuario user = this.usersList.get(usIndex);
 		List<Pedido> resultado = user.getPedidosUsuario();
 		Collections.sort(resultado,new ComparatorFecha());
 		return resultado;
-	}
+	}*/
 	
 	/**
 	 * Metodo para comprobar si un usuario existe en nuestro servidor
