@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -9,7 +11,9 @@ import javax.persistence.Table;
 @Table(name = "Producto")
 public class Producto {
 
-	private String id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
 	private String nombre;
 	
@@ -18,26 +22,26 @@ public class Producto {
 	private double precio;
 	
 	
+	public Producto() {	
+	}
 	/**
 	 * Constructor de la clase productos
-	 * @param id del producto
 	 * @param nombre del producto
 	 * @param ruta de la imagen del producto
 	 * @param precio del producto
 	 */
-	public Producto(String id, String nombre, String imagen, double precio) {
+	public Producto(String nombre, String imagen, double precio) {
 		super();
-		this.id = id;
 		this.nombre = nombre;
 		this.imagen = imagen;
 		this.precio = precio;
 	}
 
-	@Id
-	public String getId() {
+	
+	public long getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 	

@@ -1,13 +1,9 @@
 package com.example.demo.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,13 +12,14 @@ import javax.persistence.Table;
 @Table(name = "Usuario")
 public class Usuario {
 	
-	private long id;
+	@Id
 	private String user;
 	private String contrasena;
 	private String email;
 	private String nombre;
 	private String telefono;
 	private String direccion;
+	
 	
 	public Usuario() {}
 	
@@ -54,17 +51,6 @@ public class Usuario {
 		this.contrasena = contrasena;
 	}
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	@Column(name = "user", nullable = false)
 	public String getUser() {
 		return user;
 	}

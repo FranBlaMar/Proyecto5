@@ -234,7 +234,7 @@ public class UsuarioController {
 	 * @return String redireccion html
 	 */
 	@PostMapping("/editarPedido/realizarCambios/{refe}")
-	public String finalizarEdicionPedido(@RequestParam String[] productos, 
+	public String finalizarEdicionPedido(@RequestParam long[] productos, 
 		@RequestParam int[] cantidades, @PathVariable int refe, 
 		@RequestParam String direccion, @RequestParam String telefono, 
 		@RequestParam String email, @RequestParam String envio, RedirectAttributes redirectAttribute) {
