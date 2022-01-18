@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -15,22 +14,23 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.Pedido;
 import com.example.demo.model.Producto;
 import com.example.demo.model.Usuario;
+import com.example.demo.repository.PedidoRepository;
 
 @Service
 public class PedidoService {
 	@Autowired 
 	private UsuarioService servicioUsuario;
-	@Autowired 
-	private ProductoService servicioProducto;
+
 	
-	private List<Pedido> pedidosList = new ArrayList<>();
+	@Autowired
+	private PedidoRepository repositorio;
 
 	/**
 	 * 
 	 * @return La lista con todos los pedidods almacenados en el servidor
 	 */
 	public List<Pedido> findAll() {
-		return pedidosList;
+		return repositorio.findAll();
 	}
 	
 	/**
@@ -40,11 +40,11 @@ public class PedidoService {
 	 * @param HashMap con los productos y las cantidades comprados
 	 * @return El Pedido ya añadido 
 	 */
-	public Pedido crearYAnadirPedido(Usuario us,double precioTotal, HashMap<Producto,Integer> cantidadesProductos) {
+	public Pedido crearYAnadirPedido(Usuario us,double precioTotal) {
 		Pedido p = new Pedido(us,us.getDireccion(),us.getTelefono(), us.getEmail());
 		p.setPrecioTotal(precioTotal);
 		/*p.anadirProductos(cantidadesProductos);*/
-		this.pedidosList.add(p);
+		repositorio.save(p);
 		return p;
 	}
 	
@@ -80,9 +80,9 @@ public class PedidoService {
 	 * @param String con el email editado o el antiguo
 	 * @return Devuelve el Pedido editado
 	 */
-	public Pedido editarPedido(Usuario us,double precioTotal, HashMap<Producto,Integer> cantidadesProductos, String tipoEnvio, int refe, String direccion, String telefono, String email) {
+	public Pedido editarPedido(Usuario us,double precioTotal, String tipoEnvio, int refe, String direccion, String telefono, String email) {
 		Pedido resultado = null;
-		for(Pedido p: this.pedidosList) {
+		for(Pedido p: repositorio.findAll()) {
 			//Obtengo el pedido con la referencia que le indico
 			if(p.getReferencia() == refe) {
 				//Le modifico todos los datos antiguos por los nuevos
@@ -105,22 +105,20 @@ public class PedidoService {
 	 */
 	 
 	public void borrarPedido(Pedido p) {
-		this.pedidosList.remove(p);
+		this.repositorio.delete(p);
 	}
 	
 	/**
 	 * Metodo para obtener un pedido de la lista de pedidos mediante un numero de referencia
-	 * @param int con el numero de referencia del pedido que deseamos obtener
+	 * @param long con el numero de referencia del pedido que deseamos obtener
 	 * @return Pedido que estamos buscando
 	 */
-	public Pedido obtenerPedidoPorReferencia(int referencia){
-		Pedido resultado = null;
-		for(Pedido pedido: this.pedidosList) {
-			if(pedido.getReferencia() == referencia) {
-				resultado = pedido;
-			}
-		}
-		return resultado;
+	public Pedido obtenerPedidoPorReferencia(long referencia){
+		return repositorio.findById(referencia).orElse(null);
+	}
+	
+	/*public List<Pedido> obtenerPedidodeUsuario(Usuario user){
+		
 	}
 	
 	
@@ -130,11 +128,12 @@ public class PedidoService {
 	 */
 	@PostConstruct
 	public void init() {
-		//Simplemente creo pedidos de forma estatica para poder hacer comprobaciones durante el desarrollo
 		Usuario usuario1 = servicioUsuario.obtenerUsuario("F123");
+		System.out.println(usuario1);
 		Pedido pedido1 = new Pedido(usuario1,usuario1.getDireccion(), usuario1.getTelefono(), usuario1.getEmail());
 		pedido1.setTipoEnvio("ESTANDAR");
 		pedido1.setPrecioTotal(76.19);
+		
 		/*pedido1.anadirProductos(productos1);*/
 		
 		Pedido pedido2 = new Pedido(usuario1, usuario1.getDireccion(), usuario1.getTelefono(), usuario1.getEmail());
@@ -142,22 +141,14 @@ public class PedidoService {
 		LocalDate fecha = LocalDate.parse("2021-11-30");
 		pedido2.setFechaPedido(fecha);
 		pedido2.setPrecioTotal(75.49);
-		HashMap<Producto,Integer> productos2 = new HashMap<>();
-		productos2.put(this.servicioProducto.obtenerProductoPorId(4), 2);
-		productos2.put(this.servicioProducto.obtenerProductoPorId(2), 1);
-		productos2.put(this.servicioProducto.obtenerProductoPorId(5), 1);
 		/*pedido2.anadirProductos(productos2);*/
 		
 		Usuario user2 = servicioUsuario.obtenerUsuario("J123");
 		Pedido pedido3 = new Pedido(user2,user2.getDireccion(), user2.getTelefono(), user2.getEmail());
 		pedido3.setTipoEnvio("ESTANDAR");
 		pedido3.setPrecioTotal(209.68);
-		HashMap<Producto,Integer> productos3 = new HashMap<>();
-		productos3.put(this.servicioProducto.obtenerProductoPorId(6), 4);
-		productos3.put(this.servicioProducto.obtenerProductoPorId(2), 3);
-		productos3.put(this.servicioProducto.obtenerProductoPorId(4), 2);
 		/*pedido3.anadirProductos(productos3);*/
 		
-		pedidosList.addAll(Arrays.asList(pedido1,pedido2,pedido3));
+		repositorio.saveAll(Arrays.asList(pedido1,pedido2,pedido3));
 	}
 }

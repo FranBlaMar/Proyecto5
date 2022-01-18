@@ -31,10 +31,12 @@ public class UsuarioService {
 	 * @return Devuelve el usuario que hayamos encontrado, en caso de no existir devuelve nulo
 	 */
 	public Usuario comprobarUser(Usuario us) {
-		//si contiene al usuario lo devuelve. si no existe el usuario devuelve nulo
-		return repositorio.findById(us.getUser()).orElse(null);
+		Usuario resultado = null;
+		if (repositorio.findById(us.getUser().toUpperCase()).orElse(null).equals(us)) {
+			resultado = repositorio.findById(us.getUser()).orElse(null);
+		}
+		return resultado;
 	}
-	
 	/**
 	 * Metodo para obtener un usuario mediante su nombre de usuario
 	 * @param nombre de usuario de un Usuario del servidor

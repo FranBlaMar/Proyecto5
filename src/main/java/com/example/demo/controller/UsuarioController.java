@@ -63,19 +63,19 @@ public class UsuarioController {
 		
 		String resultado;
 		//Si hay errores en el formulario o la persona intenta acceder sin iniciar sesion, le reenvia al login
-		if (errores.hasErrors() || servicioUsuario.comprobarUser(newUser) == null) {
-			resultado = "redirect:/";
+		if (errores.hasErrors() || servicioUsuario.comprobarUser(newUser) == null || newUser == null) {
 			this.sesion.setAttribute("errorLogin", true);
 			redirectAttribute.addFlashAttribute("errorLogeo", Messages.getErrorLogin());
 			model.addAttribute("errorLogin", Messages.getErrorLogin());
+			resultado = "redirect:/";
 		}
 		else {
-			resultado = "menu";
+			
 			this.sesion.setAttribute("usuario", newUser.getUser());
+			resultado = "menu";
 		}
 		return resultado;
 	}
-	
 	/**
 	 * Mostrar la lista de pedidos del usuario
 	 * @param model para pasar al html el nombre del usuario y la lista de pedidos
@@ -98,7 +98,6 @@ public class UsuarioController {
 		}
 		return resultado;
 	}
-	
 	/**
 	 * Mostrar el catalogo de productos para realizar el pedido
 	 * @param model para pasar al html la lista de productos del servidor
@@ -153,7 +152,7 @@ public class UsuarioController {
 				//Obtengo el precio total del pedido
 				double precioTotal = this.servicioProducto.obtenerPrecioTotal(cantidadesProductos);
 				//Creo y añadio el pedido a la lista de pedidos
-				Pedido p = this.servicioPedido.crearYAnadirPedido(us, precioTotal, cantidadesProductos);
+				Pedido p = this.servicioPedido.crearYAnadirPedido(us, precioTotal);
 				//Le añado el pedido al usuario
 				/*this.servicioUsuario.anadirPedidoAUsuario(us, p);*/
 				model.addAttribute("pedido",p);
@@ -262,7 +261,7 @@ public class UsuarioController {
 				double precioTotal = this.servicioProducto.obtenerPrecioTotal(listaDeProductos);
 				//Obtengo el usuario y edito el pedido en la lista de pedidos y en la lista de pedidos del usuario
 				Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
-				Pedido p = this.servicioPedido.editarPedido(us, precioTotal, listaDeProductos,envio, refe, direccion, telefono, email);
+				/*Pedido p = this.servicioPedido.editarPedido(us, precioTotal, listaDeProductos,envio, refe, direccion, telefono, email);*/
 				/*this.servicioUsuario.editarPedido(p, us);*/
 				resultado ="redirect:/listaPedidos";
 			}

@@ -23,7 +23,7 @@ public class Pedido {
 	private long referencia;
 	
 	@ManyToOne
-	@JoinColumn(name="UsuarioPedido", insertable = false, updatable = false)
+	@JoinColumn(name="usuario_pedido")
 	private Usuario usuarioPedido;
 	
 	@OneToMany(mappedBy= "pedido", cascade= CascadeType.ALL)
@@ -52,6 +52,7 @@ public class Pedido {
 		this.email = email;
 	}
 
+	public Pedido() {}
 	
 	
 	public long getReferencia() {

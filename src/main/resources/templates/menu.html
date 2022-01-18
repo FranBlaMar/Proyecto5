@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
+    <title>Menú</title>
+</head>
+<body>
+
+<div class="header">
+	<h1> HOODERS </h1>
+	<form th:action="@{/cerrarSesion}">
+		<input type="submit" value="Cerrar Sesion" class="boton">
+	</form>
+</div>
+	<div class="contenedorMensa">
+		<h1>¡Bienvenid@ a Hooders!</h1>
+		<h2> Este es tu perfil</h2>
+		
+	</div>
+	<div class="contenedor">
+	<div class="opciones">
+		<form th:action="@{/realizarPedido}">
+			<input class="boton" type="submit" value="Realizar un nuevo pedido"> 
+		</form> 
+		
+		<form th:action="@{/listaPedidos}">
+			<input class="boton" type="submit" value="Comprobar lista de pedidos"> 
+		</form> 
+	</div>
+	</div>
+	
+</body>
+</html>

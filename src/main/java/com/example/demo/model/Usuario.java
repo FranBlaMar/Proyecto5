@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 
 
 @Entity
@@ -13,14 +14,15 @@ import javax.persistence.Table;
 public class Usuario {
 	
 	@Id
+	@NotEmpty
 	private String user;
+	@NotEmpty
 	private String contrasena;
 	private String email;
 	private String nombre;
 	private String telefono;
 	private String direccion;
-	
-	
+
 	public Usuario() {}
 	
 	/**
