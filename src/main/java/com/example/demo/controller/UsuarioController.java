@@ -22,6 +22,7 @@ import com.example.demo.service.ProductoService;
 import com.example.demo.service.UsuarioService;
 import com.example.demo.model.Pedido;
 import com.example.demo.model.Producto;
+import com.example.demo.model.ProductoPedido;
 import com.example.demo.model.Usuario;
 import com.example.demo.utiles.Messages;
 
@@ -63,14 +64,13 @@ public class UsuarioController {
 		
 		String resultado;
 		//Si hay errores en el formulario o la persona intenta acceder sin iniciar sesion, le reenvia al login
-		if (errores.hasErrors() || servicioUsuario.comprobarUser(newUser) == null || newUser == null) {
+		if (errores.hasErrors() || servicioUsuario.comprobarUser(newUser) == null) {
 			this.sesion.setAttribute("errorLogin", true);
 			redirectAttribute.addFlashAttribute("errorLogeo", Messages.getErrorLogin());
 			model.addAttribute("errorLogin", Messages.getErrorLogin());
 			resultado = "redirect:/";
 		}
 		else {
-			
 			this.sesion.setAttribute("usuario", newUser.getUser());
 			resultado = "menu";
 		}
@@ -92,12 +92,13 @@ public class UsuarioController {
 			Usuario usuario = this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
 			model.addAttribute("nombre", usuario.getNombre());
 			//Obtengo los pedidos del usuario anterior
-			/*List<Pedido> listaPedidos = this.servicioUsuario.obtenerPedidosDeUsuario(usuario);*/
-			/*model.addAttribute("listaPedidos", listaPedidos);*/
+			List<Pedido> listaPedidos = servicioPedido.findPedidoUser("F123");
+			model.addAttribute("listaPedidos", listaPedidos);
 			resultado = "lista";
 		}
 		return resultado;
 	}
+	
 	/**
 	 * Mostrar el catalogo de productos para realizar el pedido
 	 * @param model para pasar al html la lista de productos del servidor
@@ -126,7 +127,7 @@ public class UsuarioController {
 	 * @return String direccion html
 	 */
 	@PostMapping("/realizarPedido/añadirProductos")
-	public String realizarPedido(@RequestParam("cantidad") int[] cantidades, Model model, RedirectAttributes redirectAttributes) {
+	public String realizarPedido(@RequestParam("cantidad") int[] cantidades, Model model, RedirectAttributes redirectAttributes){
 		String resultado;
 		if(this.sesion.getAttribute("usuario") == null) {
 			resultado = "redirect:/";
@@ -145,17 +146,15 @@ public class UsuarioController {
 				redirectAttributes.addFlashAttribute("errorCatalogo", Messages.getErrorCatalogo());
 			}
 			else {
-				//si ha añadido productos correctamente, obtengo el usuario de la sesion
+				//Si ha añadido productos correctamente obtengo el usuario de la sesion
 				Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
-				//Obtendo el hashmap con los productos y las cantidades
-				HashMap<Producto,Integer> cantidadesProductos = (HashMap<Producto, Integer>) this.servicioProducto.obtenerHashMap(cantidades);
-				//Obtengo el precio total del pedido
-				double precioTotal = this.servicioProducto.obtenerPrecioTotal(cantidadesProductos);
-				//Creo y añadio el pedido a la lista de pedidos
-				Pedido p = this.servicioPedido.crearYAnadirPedido(us, precioTotal);
-				//Le añado el pedido al usuario
-				/*this.servicioUsuario.anadirPedidoAUsuario(us, p);*/
-				model.addAttribute("pedido",p);
+				//Creo el pedido
+				Pedido pe= new Pedido();
+				//Creo las lineas de pedido
+				for (int i = 0; i < cantidades.length; i++) {
+					new ProductoPedido();
+				}
+				
 				model.addAttribute("usuario",us);
 				resultado = "resumen";
 			}
@@ -182,7 +181,7 @@ public class UsuarioController {
 	 * @return String direccion html
 	 */
 	@GetMapping("/realizarPedido/resumen/finish/{refe}")
-	public String finalizarPedido(@RequestParam("envio") String envio, @RequestParam("direccion") String direccion,@PathVariable("refe") int refe) {
+	public String finalizarPedido(@RequestParam("envio") String envio, @RequestParam("direccion") String direccion, @PathVariable("refe") int refe) {
 		String resultado;
 		if(this.sesion.getAttribute("usuario") == null) {
 			resultado = "redirect:/";

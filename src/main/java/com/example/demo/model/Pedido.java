@@ -1,5 +1,4 @@
 package com.example.demo.model;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +9,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,8 +24,8 @@ public class Pedido {
 	@JoinColumn(name="usuario_pedido")
 	private Usuario usuarioPedido;
 	
-	@OneToMany(mappedBy= "pedido", cascade= CascadeType.ALL)
-	private List<ProductoPedido> productos = new ArrayList<>();
+	@OneToMany
+	private List<ProductoPedido> productos;
 	
 	private LocalDate fechaPedido;
 	private String direccion;

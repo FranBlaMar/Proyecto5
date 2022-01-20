@@ -1,11 +1,7 @@
 package com.example.demo.service;
 
-import java.util.Arrays;
 
 import java.util.List;
-
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,11 +28,17 @@ public class UsuarioService {
 	 */
 	public Usuario comprobarUser(Usuario us) {
 		Usuario resultado = null;
-		if (repositorio.findById(us.getUser().toUpperCase()).orElse(null).equals(us)) {
-			resultado = repositorio.findById(us.getUser()).orElse(null);
+		//Compruebo si existe un usuario con ese user
+		if (repositorio.findById(us.getUser()).orElse(null) != null) {
+			//Si existe, compruebo si la contraseña es correcta
+			if(repositorio.findById(us.getUser()).orElse(null).getContrasena().equals(us.getContrasena())) {
+				resultado = repositorio.findById(us.getUser()).orElse(null);
+			}
 		}
+		//Si no ha entrado en el primer if, es que no existe un usuario y devuelve resultado. Resultado está inicializado como null
 		return resultado;
 	}
+	
 	/**
 	 * Metodo para obtener un usuario mediante su nombre de usuario
 	 * @param nombre de usuario de un Usuario del servidor
@@ -44,14 +46,6 @@ public class UsuarioService {
 	 */
 	public Usuario obtenerUsuario(String us) {
 		return repositorio.findById(us).orElse(null);
-	}
-	
-	/**
-	 * Metodo postConstruct para añadir usuarios de forma estatica para realizar comprobaciones durante el desarrollo del proyecto
-	 */
-	@PostConstruct
-	public void init() {
-		repositorio.saveAll( Arrays.asList(new Usuario("J123", "123", "jorge@dominio.com","Jorgue", "911111111", "C/Rosales del campo Nº3"), new Usuario("FRAN", "BLANCO", "fran@dominio.com","Francisco", "922222222", "C/Puente romero Nº23"),new Usuario("F123", "111", "ff123@dominio.com","Maria", "933333333", "C/Perez de la luna Nº41")));
 	}
 	
 }

@@ -1,11 +1,8 @@
 package com.example.demo.service;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,21 +34,6 @@ public class ProductoService {
 		return repositorio.findById(id).orElse(null);
 	}
 	
-	/**
-	 * Metodo para recorrer la lista de productos y almacenar cada producto comprado junto a su cantidad en un hashmap
-	 * @param Array con las cantidades de los productos comprados por el usuario 
-	 * @return Un hasmap con los productos comprados como clavo y la cantidad de estos como valor
-	 */
-	public Map<Producto,Integer> obtenerHashMap(int[] cantidades){
-		HashMap<Producto,Integer> resultado = new HashMap<>();
-		//Recorro los productos del servidor y añado las cantidades de compra del usuario por orden
-		for (int i = 0; i < repositorio.findAll().size(); i++) {
-			if(cantidades[i] > 0) {
-				resultado.put(repositorio.findAll().get(i), cantidades[i]);
-			}
-		}
-		return resultado;
-	}
 	
 	/**
 	 * Metodo para calcular el precio total a pagar en un pedido
@@ -65,14 +47,6 @@ public class ProductoService {
 		    precioTotal += producto.getKey().getPrecio()*producto.getValue() ;
 		}
 		return precioTotal;
-	}
-	
-	/**
-	 * Metodo postConstruct para añadir algunos productos de forma estática para pruebas de desarrollo
-	 */
-	@PostConstruct
-	public void init() {
-		this.repositorio.saveAll( Arrays.asList (new Producto("Camiseta","camiseta.jpg", 6.99),new Producto("Sudadera","sudadera.jpg", 26.50),new Producto("Botines","botines.jpg", 36.25),new Producto("Gorro","gorro.jpg", 5.99), new Producto("Pendiente","pendiente.jpg", 2.50),new Producto("Pantalon","pantalon.jpg", 19.99) ));
 	}
 	
 }

@@ -40,13 +40,13 @@
 	        <td th:text="${pedido.tipoEnvio}"></td>
 	        <td>
 	        
-	        	<ul th:each="producto : ${pedido.listaProductos}">
+	        	<!--  <ul th:each="producto : ${pedido}">
 	        		<li th:inline="text" >
 				<span th:text="${producto.key.nombre}"></span> --
 		   		<span th:text="${producto.value}"></span>.ud
 		   		<span th:text="${resul}"></span></li>
 		   		
-	        	</ul>
+	        	</ul>-->
 	        	
 	        </td>
 	        <td th:text="${pedido.precioTotal}+€"></td>
