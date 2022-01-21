@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/styles.css" rel="stylesheet" type="text/css">
+    <title>Log-In</title>
+</head>
+<body>
+<h1>Log In</h1>
+	<div class="form">
+		
+	    <form class="formulario" action ="#" th:object="${usuario}" method="post" th:action="@{/loginUsr/submit}">
+	    
+	        <label for="user"> Usuario: <input type="text" placeholder="Nombre de usuario..." id="user" th:field="*{user}"></label>
+	        <span th:if="${#fields.hasErrors('user')}" th:errors="*{user}" id="usuario-error">Error Usuario</span>
+	        
+	        <label for="contrasena"> Contraseña: <input type="text" placeholder="Contraseña..." id="contrasena" th:field="*{contrasena}"></label>
+	        <span th:if="${#fields.hasErrors('contrasena')}" th:errors="*{contrasena}" id="contrasena-error">Error Contraseña</span>
+	        
+	        <input type="submit" value="Iniciar Sesión" id="botonSubmit" class="boton"/>
+	        <p th:text="${errorLogeo}"></p>
+	    </form>
+    </div>
+</body>
+</html>

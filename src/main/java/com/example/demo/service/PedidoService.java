@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 
 import com.example.demo.model.Pedido;
+import com.example.demo.model.Producto;
+import com.example.demo.model.ProductoPedido;
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.PedidoRepository;
 
@@ -26,37 +28,52 @@ public class PedidoService {
 	
 	/**
 	 * Metodo para almacenar pedido en la base de datos
-	 * @param p pedido a añadir
+	 * @param pedido
 	 * @return Pedido
 	 */
-	public Pedido add(Pedido p) {
-		return repositorio.save(p);
-	}
-	/**
-	 * Metodo para crear y añadir un pedido a la lista de pedidos
-	 * @param Usuario al que pertenece el pedido
-	 * @param Double del precio total del pedido
-	 * @param HashMap con los productos y las cantidades comprados
-	 * @return El Pedido ya añadido 
-	 */
-	public Pedido crearYAnadirPedido(Usuario us,double precioTotal) {
-		Pedido p = new Pedido(us,us.getDireccion(),us.getTelefono(), us.getEmail());
-		p.setPrecioTotal(precioTotal);
-		/*p.anadirProductos(cantidadesProductos);*/
-		repositorio.save(p);
-		return p;
+	public Pedido add(Pedido pedido) {
+		return repositorio.save(pedido);
 	}
 	
-	
 	/**
-	 * Metodo para añadirle a un pedido el tipo de envio y la direccion cambiada
-	 * @param String con el tipo de envio
-	 * @param String con la direccion nueva si la ha cambiado, o la alamacenada en el usuario si no la ha modificado
-	 * @param Int con la referencia del pedido
+	 * Metodo para añadir los datos del usuario a un pedido
+	 * @param pedido 
+	 * @return
 	 */
-	public void anadirTipoEnvioyDireccion(String envio, String direccion,int pedido) {
-		obtenerPedidoPorReferencia(pedido).setTipoEnvio(envio);
-		obtenerPedidoPorReferencia(pedido).setDireccion(direccion);
+	public Pedido anadirDatosUserPedido(Pedido pedido, Usuario user, int precio) {
+		pedido.setDireccion(user.getDireccion());
+		pedido.setEmail(user.getEmail());
+		pedido.setPrecioTotal(precio);
+		pedido.setTelefono(user.getTelefono());
+		pedido.setUsuarioPedido(user);
+		return pedido;
+	}
+
+	/**
+	 * Metodo para añadir la linea de pedido a un pedido
+	 * @param pedido
+	 * @param productoPedido
+	 * @param pro
+	 * @param cant
+	 */
+	public void anadirLineaPedido(Pedido pedido,ProductoPedido productoPedido, Producto pro, int cant) {
+		productoPedido.setCantidad(cant);
+		productoPedido.setProducto(pro);
+		pedido.setProductos(productoPedido);
+	}
+
+
+	/**
+	 * Metodo para añadir nueva direccion y tipo de envio a un pedido
+	 * @param envio
+	 * @param direccion
+	 * @param pedido
+	 */
+	public void anadirTipoEnvioyDireccion(String envio, String direccion,long pedido) {
+		Pedido p = obtenerPedidoPorReferencia(pedido);
+		p.setTipoEnvio(envio);
+		p.setDireccion(direccion);
+		add(p);	
 	}
 	
 	/**
@@ -91,12 +108,12 @@ public class PedidoService {
 	}
 	
 	/**
-	 * Metodo para borrar un pedido de la lista de pedidos
-	 * @param Pedido que deseamos borrar
+	 * Metodo para borrar pedidos de la base de datos
+	 * @param refe
 	 */
 	 
-	public void borrarPedido(Pedido p) {
-		this.repositorio.delete(p);
+	public void borrarPedido(long refe) {
+		this.repositorio.deleteById(refe);
 	}
 	
 	/**

@@ -20,15 +20,19 @@ public class ProductoPedido{
 	private Long idLinea;
 	
 	@ManyToOne
-	@JoinColumn(name="idProducto", insertable=false, updatable=false)
 	private Producto producto;
-	
-	@ManyToOne
-	@JoinColumn(name="idPedido", insertable=false, updatable=false)
-	private Pedido pedido;
 	
 	@Column(name = "cantidad", nullable = false)
 	private int cantidad;
+	
+	
+	public ProductoPedido(Producto pr, int cant) {
+		this.producto = pr;
+		this.cantidad = cant;
+	}
+	
+	public ProductoPedido() {
+	}
 	
 	public Long getIdLinea() {
 		return idLinea;
@@ -49,18 +53,6 @@ public class ProductoPedido{
 		this.producto = producto;
 	}
 
-
-	public Pedido getPedido() {
-		return pedido;
-	}
-
-
-	public void setPedido(Pedido pedido) {
-		this.pedido = pedido;
-	}
-
-
-	
 
 	public int getCantidad() {
 		return cantidad;

@@ -39,11 +39,15 @@
 	        <td th:text="${pedido.referencia}"></td>
 	        <td th:text="${pedido.tipoEnvio}"></td>
 	        <td>
-	        	<ul th:each="linea : ${pedido.productos}">
-	        	<li th:inline="text" th:if="${linea.cantidad > 0}" >
-				<span th:text="${linea.producto.nombre}"></span> --
-		   		<span th:text="${linea.cantidad}"></span>.ud
-	        	</ul>
+	        
+	        	<!--  <ul th:each="producto : ${pedido}">
+	        		<li th:inline="text" >
+				<span th:text="${producto.key.nombre}"></span> --
+		   		<span th:text="${producto.value}"></span>.ud
+		   		<span th:text="${resul}"></span></li>
+		   		
+	        	</ul>-->
+	        	
 	        </td>
 	        <td th:text="${pedido.precioTotal}+€"></td>
 	        <td th:text="${pedido.direccion}"></td>

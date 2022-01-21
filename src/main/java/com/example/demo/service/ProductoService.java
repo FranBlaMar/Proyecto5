@@ -35,18 +35,4 @@ public class ProductoService {
 	}
 	
 	
-	/**
-	 * Metodo para calcular el precio total a pagar en un pedido
-	 * @param HashMap con los productos y sus cantidades
-	 * @return El precio total a pagar por todos los productos
-	 */
-	public double obtenerPrecioTotal(Map<Producto,Integer> productos) {
-		double precioTotal = 0;
-		//Recorro el hashmap de productos y cantidades, y voy sumando el total del precio de los productos por su cantidad
-		for (Map.Entry<Producto, Integer> producto : productos.entrySet()) {
-		    precioTotal += producto.getKey().getPrecio()*producto.getValue() ;
-		}
-		return precioTotal;
-	}
-	
 }

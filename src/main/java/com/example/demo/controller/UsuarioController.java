@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.demo.service.LineaPedidoService;
 import com.example.demo.service.PedidoService;
 import com.example.demo.service.ProductoService;
 import com.example.demo.service.UsuarioService;
@@ -38,6 +39,8 @@ public class UsuarioController {
 	private ProductoService servicioProducto;
 	@Autowired
 	private PedidoService servicioPedido;
+	@Autowired
+	private LineaPedidoService servicioLinea;
 	
 	/**
 	 * Pantalla inicial de logeo del usuario
@@ -151,11 +154,17 @@ public class UsuarioController {
 				//Creo el pedido
 				Pedido pe= new Pedido();
 				//Creo las lineas de pedido
+				List<Producto> productos = servicioProducto.findAll();
+				int precioTotal = 0;
 				for (int i = 0; i < cantidades.length; i++) {
-					new ProductoPedido();
+					//Obtengo el precio del producto y lo multiplico por la cantidad comprada. Se suman todos los precios
+					precioTotal += productos.get(i).getPrecio()*cantidades[i];
+					servicioPedido.anadirLineaPedido(pe,new ProductoPedido(),productos.get(i),cantidades[i]);
 				}
-				
+				Pedido pedidoCompleto = servicioPedido.anadirDatosUserPedido(pe, us, precioTotal);
+				servicioPedido.add(pedidoCompleto);
 				model.addAttribute("usuario",us);
+				model.addAttribute("pedido",pedidoCompleto);
 				resultado = "resumen";
 			}
 		}
@@ -180,7 +189,7 @@ public class UsuarioController {
 	 * @param int con el numero de referencia del pedido realizado
 	 * @return String direccion html
 	 */
-	@GetMapping("/realizarPedido/resumen/finish/{refe}")
+	@PostMapping("/realizarPedido/resumen/finish/{refe}")
 	public String finalizarPedido(@RequestParam("envio") String envio, @RequestParam("direccion") String direccion, @PathVariable("refe") int refe) {
 		String resultado;
 		if(this.sesion.getAttribute("usuario") == null) {
@@ -257,7 +266,7 @@ public class UsuarioController {
 			}
 			else {
 				//Obtengo el precio total tras las modificaciones de los productos
-				double precioTotal = this.servicioProducto.obtenerPrecioTotal(listaDeProductos);
+				//double precioTotal = this.servicioProducto.obtenerPrecioTotal(listaDeProductos);
 				//Obtengo el usuario y edito el pedido en la lista de pedidos y en la lista de pedidos del usuario
 				Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
 				/*Pedido p = this.servicioPedido.editarPedido(us, precioTotal, listaDeProductos,envio, refe, direccion, telefono, email);*/
@@ -274,18 +283,14 @@ public class UsuarioController {
 	 * @return String direccion html
 	 */
 	@GetMapping ("/borrarPedido/{refe}")
-	public String borrarPedido(@PathVariable int refe) {
+	public String borrarPedido(@PathVariable long refe) {
 		String resultado;
 		if(this.sesion.getAttribute("usuario") == null) {
 			resultado = "redirect:/";
 		}
 		else {
-			//Obtengo el usuario y el pedidod que se desea borrar
-			Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
-			Pedido p = this.servicioPedido.obtenerPedidoPorReferencia(refe);
-			//Borro el pedido de ambas listas
-			/*this.servicioUsuario.borrarPedido(p, us);*/
-			this.servicioPedido.borrarPedido(p);
+			//Borro el pedido
+			this.servicioPedido.borrarPedido(refe);
 			resultado = "redirect:/listaPedidos";
 		}
 		return resultado;

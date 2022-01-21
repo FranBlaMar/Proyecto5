@@ -1,4 +1,5 @@
 package com.example.demo.model;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,8 +26,8 @@ public class Pedido {
 	@JoinColumn(name="usuario_pedido")
 	private Usuario usuarioPedido;
 	
-	@OneToMany
-	private List<ProductoPedido> productos;
+	@OneToMany (cascade=CascadeType.ALL)
+	private List<ProductoPedido> productos =new ArrayList<> ();
 	
 	private LocalDate fechaPedido;
 	private String direccion;
@@ -50,7 +52,9 @@ public class Pedido {
 		this.email = email;
 	}
 
-	public Pedido() {}
+	public Pedido() {
+		this.fechaPedido = LocalDate.now();
+	}
 	
 	
 	public long getReferencia() {
@@ -61,8 +65,8 @@ public class Pedido {
 	public List<ProductoPedido> getProductos() {
 		return productos;
 	}
-	public void setProductos(List<ProductoPedido> lista) {
-		this.productos = lista;
+	public void setProductos(ProductoPedido pp) {
+		this.productos.add(pp);
 	}
 	
 	@Column(name = "usuarioPedido", nullable = false)
