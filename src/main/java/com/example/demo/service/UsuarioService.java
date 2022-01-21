@@ -2,11 +2,18 @@ package com.example.demo.service;
 
 
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.model.Usuario;
 import com.example.demo.repository.UsuarioRepository;
+
+/**
+ * Clase servicio de usuarios
+ * @author Usuario
+ *
+ */
 @Service
 public class UsuarioService {
 	
@@ -14,7 +21,7 @@ public class UsuarioService {
 	private UsuarioRepository repositorio;
 	
 	/**
-	 * 
+	 * Metodo para obtener todos los usuarios
 	 * @return Lista de los usuarios existentes en la web
 	 */
 	public List<Usuario> findAll() {
@@ -23,8 +30,8 @@ public class UsuarioService {
 	
 	/**
 	 * Metodo para comprobar si un usuario existe en nuestro servidor
-	 * @param Usuario creado en el logni, que usaremos para comparar con ususarios existentes
-	 * @return Devuelve el usuario que hayamos encontrado, en caso de no existir devuelve nulo
+	 * @param us Usuario creado en el login, que usaremos para comparar con usuarios existentes
+	 * @return Devuelve el usuario que hayamos encontrado, en caso de no existir devuelve null
 	 */
 	public Usuario comprobarUser(Usuario us) {
 		Usuario resultado = null;
@@ -40,8 +47,8 @@ public class UsuarioService {
 	}
 	
 	/**
-	 * Metodo para obtener un usuario mediante su nombre de usuario
-	 * @param nombre de usuario de un Usuario del servidor
+	 * Metodo para obtener un usuario mediante su user
+	 * @param us Usuario
 	 * @return Devuelve el usuario que está almacenado en el servidor
 	 */
 	public Usuario obtenerUsuario(String us) {

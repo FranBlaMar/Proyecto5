@@ -26,9 +26,9 @@
 		<th>Nombre</th>
 		<th>Cantidad</th>
 	</tr>
-	<tr th:each="producto : ${pedido.listaProductos}">
-		<td th:text="${producto.key.nombre}"></td>
-        <td ><input type="number" name="cantidades" th:value="${producto.value}"/> <input type="hidden" name="productos" th:value="${producto.key.id}"/></td>      
+	<tr th:each="linea : ${pedido.productos}">
+		<td th:text="${linea.producto.nombre}"></td>
+        <td ><input type="number" name="cantidades" th:value="${linea.cantidad}"/></td>      
 	</tr>
 	</table>
     <table>
@@ -48,7 +48,6 @@
 
   		<input type="radio" id="express" name="envio" value="EXPRESS">
   		<label for="express">Express</label>
-  		<input type="hidden" th:value="${pedido.referencia}" name="ref">
 		</td>
     	</tr>
     </table>

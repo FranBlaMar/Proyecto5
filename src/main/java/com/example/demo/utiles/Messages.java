@@ -1,5 +1,10 @@
 package com.example.demo.utiles;
 
+/**
+ * Clase para almacenar mensajes de error
+ * @author Usuario
+ *
+ */
 public class Messages {
 
 	private static final String ERRORLOGIN = "Nombre de usuario o contraseña erroneos";
@@ -7,10 +12,6 @@ public class Messages {
 	private static final String ERROREDITAR = "No puedes borrar todos los productos de un pedido";
 	
 	
-	
-	public Messages() {
-		super();
-	}
 	
 	public static String getErrorLogin() {
 		return ERRORLOGIN;

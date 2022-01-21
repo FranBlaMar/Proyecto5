@@ -40,7 +40,7 @@
 	        <td th:text="${pedido.tipoEnvio}"></td>
 	        <td>
 	        	<ul th:each="linea : ${pedido.productos}">
-	        	<li th:inline="text" th:if="${linea.cantidad > 0}" >
+	        	<li th:inline="text">
 				<span th:text="${linea.producto.nombre}"></span> --
 		   		<span th:text="${linea.cantidad}"></span>.ud
 	        	</ul>

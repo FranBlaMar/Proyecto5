@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import java.util.HashMap;
+
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.example.demo.service.LineaPedidoService;
 import com.example.demo.service.PedidoService;
 import com.example.demo.service.ProductoService;
 import com.example.demo.service.UsuarioService;
@@ -27,6 +26,11 @@ import com.example.demo.model.ProductoPedido;
 import com.example.demo.model.Usuario;
 import com.example.demo.utiles.Messages;
 
+/**
+ * Clase controlador
+ * @author Usuario
+ *
+ */
 @Controller
 public class UsuarioController {
 	
@@ -39,8 +43,7 @@ public class UsuarioController {
 	private ProductoService servicioProducto;
 	@Autowired
 	private PedidoService servicioPedido;
-	@Autowired
-	private LineaPedidoService servicioLinea;
+
 	
 	/**
 	 * Pantalla inicial de logeo del usuario
@@ -53,11 +56,12 @@ public class UsuarioController {
 		return "login";
 	}
 	
+	
 	/**
-	 * Comprobacion de existencia de usuario y redireccion a menu de usuario
-	 * @param newUser creado en el formulario
-	 * @param errores producidos al crear el usuario
-	 * @param model para añadir mensaje de error
+	 * Comprobacion del usuario
+	 * @param newUser Nuevo usuario creado en el formulario
+	 * @param errores errores producidos en el formulario
+	 * @param model 
 	 * @param redirectAttribute
 	 * @return String direccion html
 	 */
@@ -74,14 +78,17 @@ public class UsuarioController {
 			resultado = "redirect:/";
 		}
 		else {
+			//Si el usuario es correcto, almacenamos el id en sesion
 			this.sesion.setAttribute("usuario", newUser.getUser());
 			resultado = "menu";
 		}
 		return resultado;
 	}
+	
+	
 	/**
-	 * Mostrar la lista de pedidos del usuario
-	 * @param model para pasar al html el nombre del usuario y la lista de pedidos
+	 * Mostrar el lista de pedidos de un usuario
+	 * @param model
 	 * @return String direccion html
 	 */
 	@GetMapping("/listaPedidos")
@@ -95,7 +102,7 @@ public class UsuarioController {
 			Usuario usuario = this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
 			model.addAttribute("nombre", usuario.getNombre());
 			//Obtengo los pedidos del usuario anterior
-			List<Pedido> listaPedidos = servicioPedido.findPedidoUser("F123");
+			List<Pedido> listaPedidos = servicioPedido.findPedidoUser(usuario.getUser()); 
 			model.addAttribute("listaPedidos", listaPedidos);
 			resultado = "lista";
 		}
@@ -104,7 +111,7 @@ public class UsuarioController {
 	
 	/**
 	 * Mostrar el catalogo de productos para realizar el pedido
-	 * @param model para pasar al html la lista de productos del servidor
+	 * @param model
 	 * @return String direccion html
 	 */
 	@GetMapping("/realizarPedido")
@@ -123,10 +130,10 @@ public class UsuarioController {
 	}
 	
 	/**
-	 * Creacion del pedido en caso de que se haya elegido minimo un producto
-	 * @param Lista de int con las cantidades de productos comprados
-	 * @param model para pasar el pedido y usuario al html
-	 * @param redirectAttributes para pasar mensaje de error al html
+	 * Recoger los productos comprados por el usuario y crear pedido
+	 * @param cantidades lista con las cantidades introducidas por el usuario 
+	 * @param model
+	 * @param redirectAttributes
 	 * @return String direccion html
 	 */
 	@PostMapping("/realizarPedido/añadirProductos")
@@ -136,35 +143,19 @@ public class UsuarioController {
 			resultado = "redirect:/";
 		}
 		else {
-			boolean comprobarCarrito = false;
-			//recorro el array con las cantidades indicadas en el formulario, para ver que ha añadido minimo 1 producto
-			for (int i = 0; i < cantidades.length && !comprobarCarrito; i++) {
-				if (cantidades[i] > 0) {
-					comprobarCarrito = true;
-				}
-			}
+			boolean comprobarCarrito = this.servicioPedido.comprobarCarrito(cantidades);
 			//Si no ha añadido ningun producto, le redirecciona al catalogo y le muestra error
 			if(!comprobarCarrito) {
 				resultado ="redirect:/realizarPedido";
 				redirectAttributes.addFlashAttribute("errorCatalogo", Messages.getErrorCatalogo());
 			}
 			else {
-				//Si ha añadido productos correctamente obtengo el usuario de la sesion
-				Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
-				//Creo el pedido
-				Pedido pe= new Pedido();
-				//Creo las lineas de pedido
-				List<Producto> productos = servicioProducto.findAll();
-				int precioTotal = 0;
-				for (int i = 0; i < cantidades.length; i++) {
-					//Obtengo el precio del producto y lo multiplico por la cantidad comprada. Se suman todos los precios
-					precioTotal += productos.get(i).getPrecio()*cantidades[i];
-					servicioPedido.anadirLineaPedido(pe,new ProductoPedido(),productos.get(i),cantidades[i]);
-				}
-				Pedido pedidoCompleto = servicioPedido.anadirDatosUserPedido(pe, us, precioTotal);
-				servicioPedido.add(pedidoCompleto);
-				model.addAttribute("usuario",us);
-				model.addAttribute("pedido",pedidoCompleto);
+				//Si la compra es correcta, obtenemos el usuario que la ha realizado
+				Usuario usuario = this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
+				//Creamos el pedido y lo añadimos al model junto al usuario
+				Pedido pedido = this.servicioPedido.crearPedido(cantidades, usuario);
+				model.addAttribute("usuario",usuario);
+				model.addAttribute("pedido",pedido);
 				resultado = "resumen";
 			}
 		}
@@ -183,11 +174,11 @@ public class UsuarioController {
 	}
 
 	/**
-	 * Añadir al pedido el tipo de envio y la dirección
-	 * @param String con el tipo de envio introducido en el formulario
-	 * @param String con la direccion del pedido
-	 * @param int con el numero de referencia del pedido realizado
-	 * @return String direccion html
+	 * Mostrar resumen del pedido realizado y añadir el tipo de envio y la direccion en caso de modificación de esta
+	 * @param envio Tipo de envio seleccionado
+	 * @param direccion Direccion de envio del usuario o una nueva direccion
+	 * @param refe id de referencia del pedido 
+	 * @return
 	 */
 	@PostMapping("/realizarPedido/resumen/finish/{refe}")
 	public String finalizarPedido(@RequestParam("envio") String envio, @RequestParam("direccion") String direccion, @PathVariable("refe") int refe) {
@@ -204,10 +195,10 @@ public class UsuarioController {
 	}
 	
 	/**
-	 * Obtención del pedido que se desea editar y envio al formulario de edicion
-	 * @param model para pasar al html el usuario y el pedido
-	 * @param int con el numero de referencia del pedido a editar
-	 * @return String direccion html
+	 * Editar pedido
+	 * @param model
+	 * @param refe id de referencia del pedido que se desea editar
+	 * @return
 	 */
 	@GetMapping("/editarPedido/{refe}")
 	public String editarPedido(Model model, @PathVariable int refe) {
@@ -229,19 +220,18 @@ public class UsuarioController {
 	
 	
 	/**
-	 * Obtencion de datos editados del pedido y modificacion de este en el servidor
-	 * @param array con los productos del pedido
-	 * @param array con las cantidades del pedido
-	 * @param int con el numero de referencia del pedido a editar
-	 * @param String con la direccion del pedido
-	 * @param String con el telefono del pedido
-	 * @param String con el email del pedido
-	 * @param String con el tipo de pedido del pedido
-	 * @param redirectAttribute para pasar al html un mensaje de error
-	 * @return String redireccion html
+	 * Realizar cambios en el pedido 
+	 * @param cantidades lista con las cantidades modificadas 
+	 * @param refe id de referencia del pedido editado
+	 * @param direccion antigua o nueva direccion, segun si se ha editado o no
+	 * @param telefono antiguo o nuevo telefono, segun si se ha editado o no
+	 * @param email antiguo o nuevo email , segun si se ha editado o no
+	 * @param envio antiguo o nuevo tipo de envio, segun si se ha editado o no
+	 * @param redirectAttribute
+	 * @return String direccion html
 	 */
 	@PostMapping("/editarPedido/realizarCambios/{refe}")
-	public String finalizarEdicionPedido(@RequestParam long[] productos, 
+	public String finalizarEdicionPedido( 
 		@RequestParam int[] cantidades, @PathVariable int refe, 
 		@RequestParam String direccion, @RequestParam String telefono, 
 		@RequestParam String email, @RequestParam String envio, RedirectAttributes redirectAttribute) {
@@ -250,27 +240,23 @@ public class UsuarioController {
 			resultado = "redirect:/";
 		}
 		else {
-			HashMap<Producto,Integer> listaDeProductos = new HashMap<>();
-			//Recorro la lista de productos del pedido, para cambiarle las cantidades o eliminarlos en caso de que el usuario o haya indicado
-			for(int i = 0; i < productos.length; i++) {
-				int cantidad = cantidades[i];
-				Producto producto = this.servicioProducto.obtenerProductoPorId(productos[i]);
-				if(cantidad > 0) {
-					listaDeProductos.put(producto,cantidad);
-				}
-			}
-			//si el usuario ha eliminado todos los productos, le redirecciono a la edicion y le muestro error
-			if (listaDeProductos.size() == 0) {
-				redirectAttribute.addFlashAttribute("errorEditar", Messages.getErrorEditar());
-				resultado = "redirect:/editarPedido/{refe}";
+			//Obtenemos el pedido mediante la referencia
+			Pedido pedido = servicioPedido.obtenerPedidoPorReferencia(refe);
+			//Obtenemos la lista de lineas del pedido
+			List<ProductoPedido> productos = pedido.getProductos();
+			//Editamos las cantidades de los productos
+			productos = this.servicioPedido.editarLineasPedido(cantidades, productos);
+			//Calculamos el nuevo precio a pagar
+			double precioTotal = this.servicioPedido.calcularPrecioTotal(productos);
+			
+			//Si el usuario ha eliminado todos los productos, le redirecciono a la edicion y le muestro error
+			if (productos.isEmpty()) {
+				servicioPedido.borrarPedido(refe);
+				resultado ="redirect:/listaPedidos";
 			}
 			else {
-				//Obtengo el precio total tras las modificaciones de los productos
-				//double precioTotal = this.servicioProducto.obtenerPrecioTotal(listaDeProductos);
-				//Obtengo el usuario y edito el pedido en la lista de pedidos y en la lista de pedidos del usuario
-				Usuario us= this.servicioUsuario.obtenerUsuario(this.sesion.getAttribute("usuario").toString());
-				/*Pedido p = this.servicioPedido.editarPedido(us, precioTotal, listaDeProductos,envio, refe, direccion, telefono, email);*/
-				/*this.servicioUsuario.editarPedido(p, us);*/
+				//Editamos el pedido
+				this.servicioPedido.editarPedido(pedido, Math.round(precioTotal*100.0)/100.0,envio, direccion, telefono, email, productos );
 				resultado ="redirect:/listaPedidos";
 			}
 		}
@@ -279,7 +265,7 @@ public class UsuarioController {
 	
 	/**
 	 * Borrado de pedido del servidor
-	 * @param int con el numero de refencia del pedido a borrar
+	 * @param refe id de refencia del pedido a borrar
 	 * @return String direccion html
 	 */
 	@GetMapping ("/borrarPedido/{refe}")

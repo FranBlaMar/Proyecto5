@@ -21,9 +21,9 @@
 	<div class="contenedorMensa">
 	<div class="cuadrado">
 	<ul>
-		<li th:each="linea : ${pedido.productos}" th:if="${linea.cantidad > 0}">
+		<li th:each="linea : ${pedido.productos}">
 			<span th:text="${linea.producto.nombre}"></span> --
-			<span th:text="${linea.producto.precio}"></span>.ud --- Precio: 
+			<span th:text="${linea.cantidad}"></span>.ud --- Precio: 
 			<span th:text="${linea.producto.precio*linea.cantidad}"></span>€
 		</li>
 	</ul>

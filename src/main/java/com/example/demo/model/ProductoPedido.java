@@ -7,10 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+/**
+ * Clase lineaPedido
+ * @author Usuario
+ *
+ */
 @Entity
 @Table(name = "LineaPedido")
 public class ProductoPedido{
@@ -25,15 +29,21 @@ public class ProductoPedido{
 	@Column(name = "cantidad", nullable = false)
 	private int cantidad;
 	
-	
-	public ProductoPedido(Producto pr, int cant) {
-		this.producto = pr;
-		this.cantidad = cant;
+	/**
+	 * Constructor de productoPedido
+	 * @param producto
+	 * @param cantidad
+	 */
+	public ProductoPedido(Producto producto, int cantidad) {
+		this.producto = producto;
+		this.cantidad = cantidad;
 	}
 	
 	public ProductoPedido() {
 	}
 	
+	
+	//Geters y seters
 	public Long getIdLinea() {
 		return idLinea;
 	}
@@ -63,7 +73,8 @@ public class ProductoPedido{
 		this.cantidad = cantidad;
 	}
 
-
+	
+	//Hashcode y equals
 	@Override
 	public int hashCode() {
 		return Objects.hash(idLinea);

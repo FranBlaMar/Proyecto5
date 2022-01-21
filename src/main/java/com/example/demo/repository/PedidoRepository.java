@@ -9,7 +9,7 @@ import com.example.demo.model.Pedido;
 
 public interface PedidoRepository  extends JpaRepository<Pedido, Long>{
 	
-	@Query("SELECT p FROM Pedido p WHERE usuario_pedido =:us")
+	@Query("SELECT p FROM Pedido p WHERE usuario_pedido =:us ORDER BY fecha_pedido DESC")
 	public List<Pedido> findPedidoUser(String us);
 	
 }

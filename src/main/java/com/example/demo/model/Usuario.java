@@ -8,7 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotEmpty;
 
-
+/**
+ * Clase usuario
+ * @author Usuario
+ *
+ */
 @Entity
 @Table(name = "Usuario")
 public class Usuario {
@@ -17,22 +21,27 @@ public class Usuario {
 	@NotEmpty
 	private String user;
 	@NotEmpty
+	@Column(name = "contrasena", nullable = false)
 	private String contrasena;
+	@Column(name = "email", nullable = false)
 	private String email;
+	@Column(name = "nombre", nullable = false)
 	private String nombre;
+	@Column(name = "telefono", nullable = false)
 	private String telefono;
+	@Column(name = "direccion", nullable = false)
 	private String direccion;
 
 	public Usuario() {}
 	
 	/**
 	 * Constructor de la clase usuario
-	 * @param nombre de usuario
-	 * @param contrasena del usuario
-	 * @param email del usuario
-	 * @param nombre del usuario
-	 * @param telefono del usuario
-	 * @param direccion del usuario
+	 * @param user
+	 * @param contrasena
+	 * @param email
+	 * @param nombre
+	 * @param telefono
+	 * @param direccion
 	 */
 	public Usuario( String user,String contrasena, String email, String nombre, String telefono, String direccion) {
 		this.user = user;
@@ -45,14 +54,16 @@ public class Usuario {
 	
 	/**
 	 * Constructor de la clase usuario con solo username y contraseña
-	 * @param nombre de ususario
-	 * @param contrasena del usuario
+	 * @param user
+	 * @param contrasena
 	 */
 	public Usuario(String user, String contrasena) {
 		this.user=user;
 		this.contrasena = contrasena;
 	}
 
+	
+	//geters y seters
 	public String getUser() {
 		return user;
 	}
@@ -61,7 +72,7 @@ public class Usuario {
 		this.user = user;
 	}
 
-	@Column(name = "contrasena", nullable = false)
+	
 	public String getContrasena() {
 		return contrasena;
 	}
@@ -70,7 +81,7 @@ public class Usuario {
 		this.contrasena = contrasena;
 	}
 	
-	@Column(name = "email", nullable = false)
+	
 	public String getEmail() {
 		return email;
 	}
@@ -79,7 +90,7 @@ public class Usuario {
 		this.email = email;
 	}
 
-	@Column(name = "nombre", nullable = false)
+	
 	public String getNombre() {
 		return nombre;
 	}
@@ -88,7 +99,7 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 
-	@Column(name = "telefono", nullable = false)
+	
 	public String getTelefono() {
 		return telefono;
 	}
@@ -97,7 +108,7 @@ public class Usuario {
 		this.telefono = telefono;
 	}
 
-	@Column(name = "direccion", nullable = false)
+	
 	public String getDireccion() {
 		return direccion;
 	}
@@ -106,6 +117,8 @@ public class Usuario {
 		this.direccion = direccion;
 	}
 	
+	
+	//hashcode y equals
 	@Override
 	public int hashCode() {
 		return Objects.hash(contrasena, user);
@@ -123,10 +136,5 @@ public class Usuario {
 		return Objects.equals(contrasena, other.contrasena) && Objects.equals(user, other.user);
 	}
 
-	@Override
-	public String toString() {
-		return "Nombre de usuario: " + user + ", email: " + email + ", nombre: " + nombre + ", telefono: "
-				+ telefono + ", direccion postal: " + direccion;
-	} 
 
 }

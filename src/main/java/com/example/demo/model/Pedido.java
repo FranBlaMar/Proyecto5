@@ -1,4 +1,5 @@
 package com.example.demo.model;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * Clase pedido
+ * @author Usuario
+ *
+ */
 @Entity
 @Table(name = "Pedido")
 public class Pedido {
@@ -26,22 +31,28 @@ public class Pedido {
 	@JoinColumn(name="usuario_pedido")
 	private Usuario usuarioPedido;
 	
-	@OneToMany (cascade=CascadeType.ALL)
+	@OneToMany (cascade=CascadeType.ALL, orphanRemoval = true)
 	private List<ProductoPedido> productos =new ArrayList<> ();
 	
+	@Column(name = "fechaPedido", nullable = false)
 	private LocalDate fechaPedido;
+	@Column(name = "direccion", nullable = false)
 	private String direccion;
+	@Column(name = "telefono", nullable = false)
 	private String telefono;
+	@Column(name = "email", nullable = false)
 	private String email;
+	@Column(name = "tipoEnvio")
 	private String tipoEnvio;
+	@Column(name = "precioTotal", nullable = false)
 	private double precioTotal;
 	
 	/**
 	 * Constructor de la clase Pedido
-	 * @param Usuario del pedido
-	 * @param Direccion del pedido
-	 * @param Telefono del usuario del pedido
-	 * @param Email del usuario del pedido
+	 * @param usuarioPedido del pedido
+	 * @param direccion del pedido
+	 * @param telefono del usuario del pedido
+	 * @param email del usuario del pedido
 	 */
 	public Pedido(Usuario usuarioPedido, String direccion, String telefono, String email) {
 		super();
@@ -57,6 +68,7 @@ public class Pedido {
 	}
 	
 	
+	//Geters y seters
 	public long getReferencia() {
 		return referencia;
 	}
@@ -65,11 +77,14 @@ public class Pedido {
 	public List<ProductoPedido> getProductos() {
 		return productos;
 	}
-	public void setProductos(ProductoPedido pp) {
+	
+	public void setProductos (List<ProductoPedido> productos) {
+		this.productos= productos;
+	}
+	public void addProductos(ProductoPedido pp) {
 		this.productos.add(pp);
 	}
 	
-	@Column(name = "usuarioPedido", nullable = false)
 	public Usuario getUsuarioPedido() {
 		return usuarioPedido;
 	}
@@ -79,7 +94,7 @@ public class Pedido {
 	}
 	
 	
-	@Column(name = "telefono", nullable = false)
+	
 	public String getTelefono() {
 		return telefono;
 	}
@@ -88,7 +103,7 @@ public class Pedido {
 		this.telefono = telefono;
 	}
 
-	@Column(name = "email", nullable = false)
+	
 	public String getEmail() {
 		return email;
 	}
@@ -98,7 +113,7 @@ public class Pedido {
 	}
 
 	
-	@Column(name = "fechaPedido", nullable = false)
+	
 	public LocalDate getFechaPedido() {
 		return fechaPedido;
 	}
@@ -107,7 +122,7 @@ public class Pedido {
 		this.fechaPedido = fechaPedido;
 	}
 	
-	@Column(name = "direccion", nullable = false)
+
 	public String getDireccion() {
 		return direccion;
 	}
@@ -116,7 +131,7 @@ public class Pedido {
 		this.direccion = direccion;
 	}
 
-	@Column(name = "tipoEnvio", nullable = false)
+	
 	public String getTipoEnvio() {
 		return tipoEnvio;
 	}
@@ -125,7 +140,7 @@ public class Pedido {
 		this.tipoEnvio = tipoEnvio;
 	}
 
-	@Column(name = "precioTotal", nullable = false)
+	
 	public double getPrecioTotal() {
 		return precioTotal;
 	}
@@ -134,6 +149,8 @@ public class Pedido {
 		this.precioTotal = precioTotal;
 	}
 
+	
+	//Hashcode y equals
 	@Override
 	public int hashCode() {
 		return Objects.hash(referencia);
@@ -149,12 +166,6 @@ public class Pedido {
 			return false;
 		Pedido other = (Pedido) obj;
 		return referencia == other.referencia;
-	}
-
-	@Override
-	public String toString() {
-		return "Pedido con referencia " + referencia + ", usuarioPedido: " + usuarioPedido + ", listaProductos: "
-				+ productos + ", fechaPedido: " + fechaPedido + "\n";
 	}
 	
 }
