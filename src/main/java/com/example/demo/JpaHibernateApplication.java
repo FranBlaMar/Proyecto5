@@ -18,7 +18,7 @@ import com.example.demo.repository.UsuarioRepository;
  *
  */
 @SpringBootApplication
-public class JpaHibernateApplication {
+public class JpaHibernateApplication extends SpringBootServletInitializer{
 
 
 	public static void main(String[] args) {
