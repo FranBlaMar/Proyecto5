@@ -10,17 +10,9 @@ import com.example.demo.service.PedidoService;
 
 @SpringBootTest
 class ProyectoSpring1ApplicationTests {
-@Autowired
-	private PedidoService servicio;
-	
-	
+
 	@Test
 	void contextLoads() {
 	}
-	
-	@Test
-	  void testFallo() {
-		Pedido p = this.servicio.borrarPedido(2);
-	    assertNotNull(p);
-	 }
+
 }
