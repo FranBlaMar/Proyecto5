@@ -80,7 +80,7 @@ public class UsuarioController {
 		else {
 			//Si el usuario es correcto, almacenamos el id en sesion
 			this.sesion.setAttribute("usuario", newUser.getUser());
-			resultado = "menu";
+			resultado = "redirect:/menu";
 		}
 		return resultado;
 	}
