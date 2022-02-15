@@ -11,8 +11,4 @@ import com.example.demo.service.PedidoService;
 @SpringBootTest
 class ProyectoSpring1ApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
-
 }
